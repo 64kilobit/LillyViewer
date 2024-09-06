@@ -1,0 +1,8 @@
+// Todo
+// make easier
+// make showable
+// add monsters
+// add labels
+// - animations
+// super nice overview of all assets
+// https://github.com/themanaworld/tmwa-client-data/blob/master/graphics/sprites/error.png
