@@ -26,7 +26,7 @@ Goal: Directly use assets from the TMW GitHub repo.
 - super nice overview of all assets (tilesets, monsters, NPCs, images, sounds, etc.)
 
 ## Notes
-Processes data from https://github.com/themanaworld/tmwa-client-data a nice open-source game wirth nice people.
+Processes data from https://github.com/themanaworld/tmwa-client-data a nice open-source game with nice people.
 
 ## Notes to resources used
 https://github.com/themanaworld/tmwa-client-data/blob/master/maps/1.world
@@ -38,4 +38,6 @@ https://github.com/themanaworld/tmwa-client-data/blob/master/tilesets/desert1.ts
 https://github.com/themanaworld/tmwa-client-data/blob/master/graphics/sprites/monsters/scorpion.xml
 
 https://github.com/themanaworld/tmwa-client-data/blob/master/graphics/sprites/error.png
+
+https://api.github.com/repos/themanaworld/tmwa-client-data/git/trees/master?recursive=1
 
