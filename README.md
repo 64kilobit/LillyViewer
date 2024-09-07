@@ -19,6 +19,7 @@ Goal: Directly use assets from the TMW GitHub repo.
 - add position on mouse pointer
 - click to warp
 - levels
+- caching
 
 ## TODOS Major
 - animations
