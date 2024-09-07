@@ -16,10 +16,13 @@ Goal: Directly use assets from the TMW GitHub repo.
 - links to repo
 - simple gui
 - add NPCs
+- add position on mouse pointer
+- click to warp
+- levels
 
 ## TODOS Major
 - animations
-- super nice overview of all assets (monsters, NPCs, images, sounds, etc.)
+- super nice overview of all assets (tilesets, monsters, NPCs, images, sounds, etc.)
 
 ## Notes
 Processes data from https://github.com/themanaworld/tmwa-client-data a nice open-source game wirth nice people.
