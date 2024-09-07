@@ -3,16 +3,38 @@
 // https://github.com/themanaworld/tmwa-client-data/blob/master/tilesets/desert1.tsx
 // https://github.com/themanaworld/tmwa-client-data/blob/master/graphics/sprites/monsters/scorpion.xml
 
+
 let scale;
-scale=1;
-scale = 0.5;
-const mapCount=2;
-const isDrawCollision=0;
-const isDrawText=1;
-const isDrawObjects=1;
-const isDrawBox=1;
- 
- 
+let mapCount;
+let isDrawCollision;
+let isDrawText;
+let isDrawObjects;
+let isDrawBox;
+
+// Register the hashchange event listener
+window.addEventListener('hashchange', readParameters);
+
+function readParameters(){
+    if (!window.location.hash) {
+      // Set a default hash if not present
+      window.location.hash = "#scale=0.5&mapcount=2&coll=0&text=0&objects=0&box=0";
+    }
+
+  let params = new URLSearchParams(window.location.hash.substring(1));
+  scale = parseFloat(params.get('scale'));
+  mapCount = parseInt(params.get('mapcount'), 10);
+  isDrawCollision = Boolean(parseInt(params.get('coll'), 10));
+  isDrawText = Boolean(parseInt(params.get('text'), 10));
+  console.log(isDrawText);
+  isDrawObjects = Boolean(parseInt(params.get('objects'), 10));
+  isDrawBox = Boolean(parseInt(params.get('box'), 10));
+  // draw world
+  drawWorld();
+}
+
+
+
+
 const assetsBaseUrl =
   'https://raw.githubusercontent.com/themanaworld/tmwa-client-data/master/maps/';
 const worldDataFile = assetsBaseUrl + '1.world';
@@ -316,4 +338,4 @@ async function drawWorld() {
   }
 }
 
-drawWorld();
+readParameters()
