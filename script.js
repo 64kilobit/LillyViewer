@@ -3,6 +3,9 @@
 // https://github.com/themanaworld/tmwa-client-data/blob/master/tilesets/desert1.tsx
 // https://github.com/themanaworld/tmwa-client-data/blob/master/graphics/sprites/monsters/scorpion.xml
 
+// Jack O
+// DrunkLadySkeleton
+// MegaManaBug
 
 let scale;
 let mapCount;
@@ -10,19 +13,46 @@ let isDrawCollision;
 let isDrawText;
 let isDrawObjects;
 let isDrawBox;
+let objectSize;
 
 // Register the hashchange event listener
 window.addEventListener('hashchange', readParameters);
 
-function readParameters(){
-    if (!window.location.hash) {
-      // Set a default hash if not present
-      window.location.hash = "#scale=0.5&mapcount=2&coll=0&text=0&objects=0&box=0";
-    }
+const assetsBaseUrl =
+  'https://raw.githubusercontent.com/themanaworld/tmwa-client-data/master/maps/';
+const worldDataFile = assetsBaseUrl + '1.world';
+
+function l(text) {
+  console.log(text);
+}
+
+async function readMonsters() {
+  const monsterMap = new Map();
+  const monsters = await loadXML(assetsBaseUrl + '../monsters.xml');
+  const monsterList = monsters.querySelectorAll('monster');
+
+  for (let monster of monsterList) {
+    const name = monster.getAttribute('name').replace(' ', '');
+    const spriteName = monster
+      .querySelector('sprite')
+      .textContent.split('|')[0];
+    monsterMap.set(name, spriteName);
+  }
+
+  return monsterMap;
+}
+
+function readParameters() {
+  if (!window.location.hash) {
+    // Set a default hash if not present
+    window.location.hash =
+      '#scale=0.5&mapcount=2&coll=0&text=1&objects=1&box=1&objectSize=10';
+  }
 
   let params = new URLSearchParams(window.location.hash.substring(1));
   scale = parseFloat(params.get('scale'));
   mapCount = parseInt(params.get('mapcount'), 10);
+  objectSize = parseInt(params.get('objectSize'), 10);
   isDrawCollision = Boolean(parseInt(params.get('coll'), 10));
   isDrawText = Boolean(parseInt(params.get('text'), 10));
   console.log(isDrawText);
@@ -31,13 +61,6 @@ function readParameters(){
   // draw world
   drawWorld();
 }
-
-
-
-
-const assetsBaseUrl =
-  'https://raw.githubusercontent.com/themanaworld/tmwa-client-data/master/maps/';
-const worldDataFile = assetsBaseUrl + '1.world';
 
 // Function to load XML data from a file URL
 async function loadXML(fileUrl) {
@@ -89,7 +112,9 @@ async function loadAllTilesets(mapXml) {
       tileset.firstgid = parseInt(tilesetElement.getAttribute('firstgid'));
 
       // Calculate the total number of tiles in the tileset
-      const tileCount = (tileset.width / tileset.tileWidth) * (tileset.height / tileset.tileHeight);
+      const tileCount =
+        (tileset.width / tileset.tileWidth) *
+        (tileset.height / tileset.tileHeight);
 
       for (let tileIndex = 0; tileIndex < tileCount; tileIndex++) {
         const tileId = tileset.firstgid + tileIndex;
@@ -99,8 +124,9 @@ async function loadAllTilesets(mapXml) {
           tileWidth: tileset.tileWidth,
           tileHeight: tileset.tileHeight,
           tilesPerRow: tileset.tilesPerRow,
-          sourceX : (tileIndex % tileset.tilesPerRow) * tileset.tileWidth,
-          sourceY : Math.floor(tileIndex / tileset.tilesPerRow) * tileset.tileHeight,
+          sourceX: (tileIndex % tileset.tilesPerRow) * tileset.tileWidth,
+          sourceY:
+            Math.floor(tileIndex / tileset.tilesPerRow) * tileset.tileHeight,
         };
         tileIdMap.set(tileId, tileInfo); // Store tile-specific data
       }
@@ -110,68 +136,69 @@ async function loadAllTilesets(mapXml) {
   return tileIdMap; // Only return the tileIdMap
 }
 
-
-
 // Function to load a tileset from a TSX (Tile Set XML) file
 async function loadObject(tilesetSource) {
+  // l('tilesetSource: ' + tilesetSource);
   try {
     // console.log(assetsBaseUrl + tilesetSource)
     const tilesetXml = await loadXML(assetsBaseUrl + tilesetSource);
     const tilesetElement = tilesetXml.querySelector('imageset');
-    
-    let imageSource=tilesetElement.getAttribute('src').split("|")[0]
+
+    let imageSource = tilesetElement.getAttribute('src').split('|')[0];
 
     const tileset = {
       tilesetImage: new Image(), // Image element to hold the tileset image
       tileWidth: parseInt(tilesetElement.getAttribute('width')),
       tileHeight: parseInt(tilesetElement.getAttribute('height')),
     };
-    
-    tileset.tilesetImage.src = assetsBaseUrl + "../"+imageSource;
+
+    tileset.tilesetImage.src = assetsBaseUrl + '../' + imageSource;
     // console.log(tileset.tilesetImage.src)
     return tileset;
   } catch (error) {
-    // console.error(`Error loading object from XML:`, error);
+    console.error('Error loading object from XML for ' + tilesetSource, error);
     return null;
   }
 }
 
 // Function to load all tilesets referenced in a map's XML
-async function loadAllObjects(mapXml) {
-  const tileIdMap = new Map(); 
-
+async function loadAllObjects(mapXml, monsterMap) {
+  const tileIdMap = new Map();
   const tilesetElements = mapXml.querySelectorAll('object[type="spawn"]');
-  
   for (let tilesetElement of tilesetElements) {
     const tilesetSource = tilesetElement.getAttribute('name');
-    // console.log(tilesetSource)
-    let croppedname=nameToObject(tilesetSource);
+    l('tilesetSource: ' + tilesetSource);
+    let croppedname = monsterMap.get(tilesetSource);
+    l('croppedname:' + croppedname);
 
-    let url = "../graphics/sprites/monsters/"+croppedname+".xml";
+    let url = '../graphics/sprites/' + croppedname;
     let tileset = await loadObject(url);
     if (tileset) {
-      tileIdMap.set(croppedname, tileset);
+      //here
+      tileIdMap.set(tilesetSource, tileset);
     }
   }
 
   return tileIdMap;
 }
 
-function nameToObject(name){
-  return name.toLowerCase().replace("red","").replace("green","").replace("yellow", "").replace("sea", "").replace("mountain","").replace("fire","");
-}
-
-
 // Function to draw all layers of a map (tiles and objects)
-function drawMap(context, mapXml, tileIdMap, objectIdMap, offsetX = 0, offsetY = 0) {
+function drawMap(
+  context,
+  mapXml,
+  tileIdMap,
+  objectIdMap,
+  monsterMap,
+  offsetX = 0,
+  offsetY = 0
+) {
   const layers = mapXml.querySelectorAll('layer');
-  const objectGroups = mapXml.querySelectorAll('objectgroup');
   const mapElement = mapXml.querySelector('map');
   const mapTileWidth = parseInt(mapElement.getAttribute('tilewidth'));
   const mapTileHeight = parseInt(mapElement.getAttribute('tileheight'));
 
   // console.log(`Drawing map at offset: X=${offsetX}, Y=${offsetY}`);
-  
+
   layers.forEach((layer) => {
     const layerName = layer.getAttribute('name');
     const layerOffsetX = parseFloat(layer.getAttribute('offsetx') || 0);
@@ -201,7 +228,8 @@ function drawMap(context, mapXml, tileIdMap, objectIdMap, offsetX = 0, offsetY =
             continue;
           }
 
-          const { tilesetImage, sourceX, sourceY, tileWidth, tileHeight } = tileInfo;
+          const { tilesetImage, sourceX, sourceY, tileWidth, tileHeight } =
+            tileInfo;
 
           context.drawImage(
             tilesetImage,
@@ -218,61 +246,81 @@ function drawMap(context, mapXml, tileIdMap, objectIdMap, offsetX = 0, offsetY =
       }
     }
   });
+}
 
+// Function to draw all layers of a map (tiles and objects)
+function drawObjects(
+  context,
+  mapXml,
+  tileIdMap,
+  objectIdMap,
+  monsterMap,
+  offsetX = 0,
+  offsetY = 0
+) {
+  const objectGroups = mapXml.querySelectorAll('objectgroup');
+  const mapElement = mapXml.querySelector('map');
+  const mapTileWidth = parseInt(mapElement.getAttribute('tilewidth'));
+  const mapTileHeight = parseInt(mapElement.getAttribute('tileheight'));
   // Draw objects (like trees, buildings) from object layers
   objectGroups.forEach((objectGroup) => {
     const objects = objectGroup.querySelectorAll('object');
     objects.forEach((object) => {
       const objectX = parseFloat(object.getAttribute('x'));
       const objectY = parseFloat(object.getAttribute('y'));
-      const objectWidth = parseFloat(object.getAttribute('width') || mapTileWidth);
-      const objectHeight = parseFloat(object.getAttribute('height') || mapTileHeight);
+      const objectWidth = parseFloat(
+        object.getAttribute('width') || mapTileWidth
+      );
+      const objectHeight = parseFloat(
+        object.getAttribute('height') || mapTileHeight
+      );
       const objectName = object.getAttribute('name') || '';
       const objectType = object.getAttribute('type') || '';
-      
-      let croppedName=nameToObject(objectName);
 
-      if (isDrawObjects &&objectType==="spawn"){
-
-        const tileInfo = objectIdMap.get(croppedName);
-
-        if (tileInfo){
+      //here
+      if (isDrawObjects && objectType === 'spawn') {
+        const tileInfo = objectIdMap.get(objectName);
+        if (tileInfo) {
           // console.log("drawing "+objectName)
           const { tilesetImage, tileWidth, tileHeight } = tileInfo;
           // console.log(tileInfo)
-          
+
           context.drawImage(
             tilesetImage,
             0,
             0,
             tileWidth,
             tileHeight,
-            objectX +offsetX ,
-            objectY +offsetY,
-            5*tileWidth,
-            5*tileHeight
-          
+            objectX + offsetX,
+            objectY + offsetY,
+            objectSize * tileWidth,
+            objectSize * tileHeight
           );
-
-
-        } else{
+        } else {
           // console.error(`Object ID ${objectName} not found in objectIdMap`);
-    
         }
-      }else{
-      // Draw a red rectangle around the object (for debugging)
-      if (isDrawBox){
-      context.strokeStyle = 'red';
-      context.lineWidth = 4;
-      context.strokeRect(objectX + offsetX, objectY + offsetY, objectWidth, objectHeight);
+      } else {
+        // Draw a red rectangle around the object (for debugging)
+        if (isDrawBox) {
+          context.strokeStyle = 'red';
+          context.lineWidth = 4;
+          context.strokeRect(
+            objectX + offsetX,
+            objectY + offsetY,
+            objectWidth,
+            objectHeight
+          );
+        }
+        // Draw the object's name
+        if (isDrawText && objectType === 'warp') {
+          drwText(
+            context,
+            objectName,
+            objectX + offsetX,
+            objectY + offsetY - 5
+          );
+        }
       }
-      // Draw the object's name
-      if (isDrawText&&objectType==="warp"){
-      drwText(context, objectName, objectX + offsetX, objectY + offsetY - 5);
-      }
-    }
-
-
     });
   });
 }
@@ -286,24 +334,31 @@ function drwText(context, text, x, y) {
   context.fillText(text, x, y);
 }
 
-
 // Main function to draw the entire world map with optimized tile lookup and objects
 async function drawWorld() {
   const canvas = document.getElementById('mapCanvas');
   const context = canvas.getContext('2d');
+  const monsterMap = await readMonsters();
 
   try {
     const worldData = await (await fetch(worldDataFile)).json();
 
-    let minX = Infinity, minY = Infinity, maxX = -Infinity, maxY = -Infinity;
+    let minX = Infinity,
+      minY = Infinity,
+      maxX = -Infinity,
+      maxY = -Infinity;
 
     // Load map data and calculate world bounds
     const maps = await Promise.all(
       worldData.maps.slice(0, mapCount).map(async (mapInfo) => {
         const mapXml = await loadXML(assetsBaseUrl + mapInfo.fileName);
         const mapElement = mapXml.querySelector('map');
-        const mapWidth = parseInt(mapElement.getAttribute('width')) * parseInt(mapElement.getAttribute('tilewidth'));
-        const mapHeight = parseInt(mapElement.getAttribute('height')) * parseInt(mapElement.getAttribute('tileheight'));
+        const mapWidth =
+          parseInt(mapElement.getAttribute('width')) *
+          parseInt(mapElement.getAttribute('tilewidth'));
+        const mapHeight =
+          parseInt(mapElement.getAttribute('height')) *
+          parseInt(mapElement.getAttribute('tileheight'));
 
         minX = Math.min(minX, mapInfo.x);
         minY = Math.min(minY, mapInfo.y);
@@ -325,11 +380,43 @@ async function drawWorld() {
     // Draw each map onto the canvas
     for (const { mapXml, mapInfo } of maps) {
       const tileIdMap = await loadAllTilesets(mapXml);
-      const objectIdMap = await loadAllObjects(mapXml); // Load objects (e.g., spawns)
 
-      console.log(`Drawing map: ${mapInfo.fileName} at X=${mapInfo.x - minX}, Y=${mapInfo.y - minY}`);
+      // console.log(
+      //   `Drawing map: ${mapInfo.fileName} at X=${mapInfo.x - minX}, Y=${
+      //     mapInfo.y - minY
+      //   }`
+      // );
 
-      drawMap(context, mapXml, tileIdMap, objectIdMap, mapInfo.x - minX, mapInfo.y - minY);
+      drawMap(
+        context,
+        mapXml,
+        tileIdMap,
+        null,
+        monsterMap,
+        mapInfo.x - minX,
+        mapInfo.y - minY
+      );
+    }
+
+    // Draw each map onto the canvas
+    for (const { mapXml, mapInfo } of maps) {
+      const objectIdMap = await loadAllObjects(mapXml, monsterMap); // Load objects (e.g., spawns)
+
+      console.log(
+        `Drawing map: ${mapInfo.fileName} at X=${mapInfo.x - minX}, Y=${
+          mapInfo.y - minY
+        }`
+      );
+
+      drawObjects(
+        context,
+        mapXml,
+        null,
+        objectIdMap,
+        monsterMap,
+        mapInfo.x - minX,
+        mapInfo.y - minY
+      );
     }
 
     console.log('World map rendering completed.');
@@ -338,4 +425,4 @@ async function drawWorld() {
   }
 }
 
-readParameters()
+readParameters();
