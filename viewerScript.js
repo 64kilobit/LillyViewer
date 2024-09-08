@@ -109,9 +109,15 @@ async function monsters() {
           );
         }
       }
-      add('<div>' + a(baseUrl +spriteName, spriteName) + ' ' + spriteRest + '</div>');
+      add(
+        '<div>' +
+          a(baseUrl2 + spriteName, spriteName) +
+          ' ' +
+          spriteRest +
+          '</div>'
+      );
 
-      const specificMonster = await loadXML(baseUrl2 +spriteName);
+      const specificMonster = await loadXML(baseUrl2 + spriteName);
 
       const image = specificMonster.querySelector('imageset');
       const imageWidth = image.getAttribute('width');
@@ -120,7 +126,7 @@ async function monsters() {
       const imageRest = image.getAttribute('src').split('|')[1];
       add(
         '<div>' +
-          a(baseUrl +imageName, imageName) +
+          a(baseUrl + imageName, imageName) +
           +imageRest +
           ' w=' +
           imageWidth +
@@ -133,5 +139,5 @@ async function monsters() {
   }
 }
 
-// quests();
 monsters();
+quests();
