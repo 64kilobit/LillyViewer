@@ -3,7 +3,7 @@
 Goal: Create a Viewer for The Mana World (TMW) resources.
 Goal: Directly use assets from the TMW GitHub repo.
 
-[Map Demo](https://64kilobit.github.io/LillyViewer/#scale=0.5&mapcount=2&coll=0&text=1&objects=1&box=0)
+[Map Demo](https://64kilobit.github.io/LillyViewer/#scale=0.5&mapcount=2&coll=0&text=1&objects=1&box=1&objectSize=10)
 
 [Viewer Demo](https://64kilobit.github.io/LillyViewer/viewer.html)
 
