@@ -12,19 +12,38 @@ let showTileInfo = true;
 
 // Function to read parameters from the URL hash and update the content
 function readParameters() {
-  let params = new URLSearchParams(window.location.hash.substring(1));
+  if (!window.location.hash) {
+    // Set a default hash if not present
+    window.location.hash = '#maxTilesets=10&showImage=1&showTileInfo=1';
+    // The hashchange event will trigger readParameters again
+  } else {
+    let params = new URLSearchParams(window.location.hash.substring(1));
 
-  // Use the defaults if parameters are missing
-  maxTilesets = parseInt(params.get('maxTilesets'), 10) || maxTilesets;
-  showImage = params.has('showImage')
-    ? params.get('showImage') !== '0'
-    : showImage;
-  showTileInfo = params.has('showTileInfo')
-    ? params.get('showTileInfo') !== '0'
-    : showTileInfo;
+    // Use the defaults if parameters are missing
+    maxTilesets = parseInt(params.get('maxTilesets'), 10) || maxTilesets;
+    showImage = params.get('showImage') !== '0'; // Default to true unless '0'
+    showTileInfo = params.get('showTileInfo') !== '0'; // Default to true unless '0'
 
-  // Update the content based on the current parameters
-  updateContent();
+    // Update the content based on the current parameters
+    updateContent();
+  }
+}
+
+// Function to dynamically add instructions on how to use the hash parameters
+function addInstructions() {
+  const instructionsDiv = document.createElement('div');
+  instructionsDiv.id = 'instructions';
+  instructionsDiv.innerHTML = `
+        <h2>How to Use URL Hash Parameters</h2>
+        <ul>
+            <li><strong>maxTilesets</strong>: Number of tilesets to display (e.g., <code>#maxTilesets=200</code>).</li>
+            <li><strong>showImage</strong>: Set to <code>0</code> to hide images (e.g., <code>#showImage=1</code>).</li>
+            <li><strong>showTileInfo</strong>: Set to <code>0</code> to hide tileset information (e.g., <code>#showTileInfo=1</code>).</li>
+        </ul>
+    `;
+
+  const bodyElement = document.body;
+  bodyElement.insertBefore(instructionsDiv, document.getElementById('content'));
 }
 
 // Function to update the content based on the current parameters
@@ -103,12 +122,6 @@ async function processTileset(tsxFile) {
         // Remove leading './' or '../'
         imagePath = imageSource.replace(/^(\.\/|\.\.\/)*/, '');
         imageSource = rawBaseUrl + imagePath;
-      } else {
-        // For absolute URLs, extract the path after 'master/'
-        const index = imageSource.indexOf('/master/');
-        if (index !== -1) {
-          imagePath = imageSource.substring(index + 8); // 8 is length of '/master/'
-        }
       }
 
       // Get image width and height
@@ -229,6 +242,7 @@ function displayTileset(tilesetInfo) {
 }
 
 // Initialize the page on load
+addInstructions();
 readParameters();
 
 // Register the hashchange event listener
