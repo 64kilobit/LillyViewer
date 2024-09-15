@@ -1,4 +1,5 @@
-# LillyViewer
+# LillyTools
+LillyTools helps you to explore The Mana World Assets.
 
 Goal: Create a Viewer for The Mana World (TMW) resources.
 Goal: Directly use assets from the TMW GitHub repo.
