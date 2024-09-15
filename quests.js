@@ -139,5 +139,4 @@ async function monsters() {
   }
 }
 
-monsters();
 quests();
