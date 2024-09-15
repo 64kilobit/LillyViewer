@@ -3,6 +3,7 @@
 Goal: Create a Viewer for The Mana World (TMW) resources.
 Goal: Directly use assets from the TMW GitHub repo.
 
+## Demo
 [Map Demo](https://64kilobit.github.io/LillyViewer/#scale=0.5&mapcount=10&coll=0&text=1&objects=1&box=1&objectSize=10&mapInfo=1&mapFrames=1&objectMarkers=0) 
 
 [Tiles Demo](https://64kilobit.github.io/LillyViewer/tiles.html)
@@ -12,17 +13,19 @@ Goal: Directly use assets from the TMW GitHub repo.
 [Quests Demo](https://64kilobit.github.io/LillyViewer/quests.html)
 
 
+
+## Code Editor
 [Map Code](https://stackblitz.com/edit/stackblitz-starters-xpxweg?file=script.js)
 
-[Tiles Demo](https://stackblitz.com/edit/stackblitz-starters-txmjni?file=script.js))
+[Tiles Demo](https://stackblitz.com/edit/stackblitz-starters-txmjni?file=script.js)
 
-[Monsters Demo](https://stackblitz.com/edit/stackblitz-starters-xpesk1?file=script.js))
+[Monsters Demo](https://stackblitz.com/edit/stackblitz-starters-xpesk1?file=script.js)
 
-[Quests Demo](https://stackblitz.com/edit/stackblitz-starters-qt6euy?file=script.js))
+[Quests Demo](https://stackblitz.com/edit/stackblitz-starters-qt6euy?file=script.js)
 
 
 
-## Todos Minor
+## Map Todos
 - list of worlds
 - list of maps
 - title
@@ -32,9 +35,18 @@ Goal: Directly use assets from the TMW GitHub repo.
 - add position on mouse pointer
 - click to warp
 - levels
-- caching
+- caching ✅
+- link minimaps 
 
-## TODOS Major
+## Todos more resources
+- tiles ✅
+- quests ✅
+- items
+- maps ✅
+- NPCs
+- emotes
+
+## TODOS major
 - animations
 - super nice overview of all assets (tilesets, monsters, NPCs, images, sounds, etc.)
 
