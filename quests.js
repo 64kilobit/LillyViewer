@@ -59,13 +59,13 @@ async function quests() {
 
     for (let l2 of questsL2Include) {
       const urlL2 = l2.getAttribute('name');
-      document.getElementById('content2').innerHTML += '<h1>' + urlL2 + '</h1>';
+      document.getElementById('content').innerHTML += '<h1>' + urlL2 + '</h1>';
       const questsL3 = await loadXML(baseUrl + urlL2);
       const questsL3Include = questsL3.querySelectorAll('include');
 
       for (let l3 of questsL3Include) {
         const urlL3 = l3.getAttribute('name');
-        document.getElementById('content2').innerHTML +=
+        document.getElementById('content').innerHTML +=
           '<h1>' + urlL3 + '</h1>';
 
         const questsL4 = await loadXML(baseUrl + urlL3);
@@ -76,7 +76,7 @@ async function quests() {
           const group = l4.getAttribute('group');
           const texts = l4.querySelectorAll('text');
           for (let text of texts) {
-            document.getElementById('content2').innerHTML +=
+            document.getElementById('content').innerHTML +=
               '<br>' + group + ' &gt; ' + urlL4 + ' &gt; ' + text.textContent;
           }
         }
