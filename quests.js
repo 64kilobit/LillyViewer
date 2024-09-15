@@ -53,7 +53,7 @@ async function quests() {
 
   for (let l1 of questsL1Include) {
     const urlL1 = l1.getAttribute('name');
-    document.getElementById('content2').innerHTML += '<h1>' + urlL1 + '</h1>';
+    document.getElementById('content').innerHTML += '<h1>' + urlL1 + '</h1>';
     const questsL2 = await loadXML(baseUrl + urlL1);
     const questsL2Include = questsL2.querySelectorAll('include');
 
