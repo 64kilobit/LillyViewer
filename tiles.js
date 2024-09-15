@@ -5,8 +5,6 @@ const apiUrl =
   'https://api.github.com/repos/themanaworld/tmwa-client-data/contents/tilesets';
 const rawBaseUrl =
   'https://raw.githubusercontent.com/themanaworld/tmwa-client-data/master/';
-const githubBaseUrl =
-  'https://github.com/themanaworld/tmwa-client-data/blob/master/';
 
 let maxTilesets = 10;
 let showImage = true;
@@ -133,7 +131,10 @@ async function processTileset(tsxFile) {
 
     // Build GitHub URLs
     const tsxGithubUrl = tsxFile.html_url; // Link to the .tsx file on GitHub
-    const imageGithubUrl = imagePath ? githubBaseUrl + imagePath : '';
+    const imageGithubUrl = imagePath
+      ? 'https://github.com/themanaworld/tmwa-client-data/blob/master/' +
+        imagePath
+      : '';
 
     // Display the tileset information
     displayTileset({
@@ -162,12 +163,7 @@ function displayTileset(tilesetInfo) {
   tilesetDiv.classList.add('tileset');
 
   const title = document.createElement('h2');
-  // Create a link to the GitHub page of the tileset (.tsx file)
-  const titleLink = document.createElement('a');
-  titleLink.href = tilesetInfo.tsxGithubUrl;
-  titleLink.target = '_blank';
-  titleLink.textContent = tilesetInfo.tsxFileName;
-  title.appendChild(titleLink);
+  title.textContent = tilesetInfo.tsxFileName;
   tilesetDiv.appendChild(title);
 
   if (showImage && tilesetInfo.imageSource) {
@@ -205,13 +201,23 @@ function displayTileset(tilesetInfo) {
       infoList.appendChild(columnsItem);
     }
 
-    // Add link to the image (.png file) on GitHub
+    // Add links to the TSX and PNG files on GitHub
+    if (tilesetInfo.tsxGithubUrl) {
+      const tsxLinkItem = document.createElement('li');
+      const tsxLink = document.createElement('a');
+      tsxLink.href = tilesetInfo.tsxGithubUrl;
+      tsxLink.target = '_blank';
+      tsxLink.textContent = 'TSX on GitHub';
+      tsxLinkItem.appendChild(tsxLink);
+      infoList.appendChild(tsxLinkItem);
+    }
+
     if (tilesetInfo.imageGithubUrl) {
       const imageLinkItem = document.createElement('li');
       const imageLink = document.createElement('a');
       imageLink.href = tilesetInfo.imageGithubUrl;
       imageLink.target = '_blank';
-      imageLink.textContent = 'View Image on GitHub';
+      imageLink.textContent = 'PNG on GitHub';
       imageLinkItem.appendChild(imageLink);
       infoList.appendChild(imageLinkItem);
     }
