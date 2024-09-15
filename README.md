@@ -5,7 +5,12 @@ Goal: Directly use assets from the TMW GitHub repo.
 
 [Map Demo](https://64kilobit.github.io/LillyViewer/#scale=0.5&mapcount=10&coll=0&text=1&objects=1&box=1&objectSize=10&mapInfo=1&mapFrames=1&objectMarkers=0)
 
-[Viewer Demo](https://64kilobit.github.io/LillyViewer/viewer.html)
+[Tiles Demo](https://64kilobit.github.io/LillyViewer/tiles.html)
+
+[Monsters Demo](https://64kilobit.github.io/LillyViewer/monsters.html)
+
+[Quests Demo](https://64kilobit.github.io/LillyViewer/quests.html)
+
 
 
 ## Todos Minor
