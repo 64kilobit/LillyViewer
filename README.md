@@ -41,6 +41,7 @@ Goal: Directly use assets from the TMW GitHub repo.
 
 ## Todos more resources
 - tiles ✅
+- load tiles based on popularity in map.
 - quests ✅
 - items
 - maps ✅
