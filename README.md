@@ -37,7 +37,8 @@ Goal: Directly use assets from the TMW GitHub repo.
 - click to warp
 - levels
 - caching ✅
-- link minimaps 
+- link minimaps
+- layers 
 
 ## Todos more resources
 - tiles ✅
